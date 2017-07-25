@@ -179,18 +179,18 @@ function getReferenceType(type, genericTypes) {
         }
         inProgressTypes[typeNameWithGenerics] = true;
         var modelTypeDeclaration = getModelTypeDeclaration(type);
+        var extendedProperties = getInheritedProperties(modelTypeDeclaration);
         var properties = getModelTypeProperties(modelTypeDeclaration, genericTypes);
         var additionalProperties = getModelTypeAdditionalProperties(modelTypeDeclaration);
         var referenceType = {
             description: getModelDescription(modelTypeDeclaration),
-            properties: properties,
+            properties: extendedProperties || [],
             typeName: typeNameWithGenerics,
         };
+        referenceType.properties = referenceType.properties.concat(properties);
         if (additionalProperties) {
             referenceType.additionalProperties = additionalProperties;
         }
-        var extendedProperties = getInheritedProperties(modelTypeDeclaration);
-        referenceType.properties = referenceType.properties.concat(extendedProperties);
         localReferenceTypeCache[typeNameWithGenerics] = referenceType;
         return referenceType;
     }
